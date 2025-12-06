@@ -1,4 +1,12 @@
-# PRAKTIKUM 10 – PEMROGRAMAN BERORIENTASI OBJEK (OOP PHP)
+# Identitas Mahasiswa
+
+**Nama :** Afdhal Agislam  
+**NIM :** 312410445  
+**Kelas :** TI.24.A5  
+
+---
+
+## PRAKTIKUM 10 – PEMROGRAMAN BERORIENTASI OBJEK (OOP PHP)
 
 Praktikum ini bertujuan mengenalkan konsep dasar Object Oriented Programming (OOP) dalam PHP melalui contoh kelas Mobil, form input, dan pemrosesan data menggunakan object.
 
