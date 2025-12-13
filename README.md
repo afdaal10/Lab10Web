@@ -296,10 +296,10 @@ Akses: `index.php?page=barang`
 ![List Barang](data_barang.png)
 
 ### 4. Halaman Tambah Barang
-![Tambah Data](screenshots/tambah_barang.png)
+![Tambah Data](tambah_barang.png)
 
 ### 5. Hasil Setelah Tambah Barang
-![Hasil Tambah](screenshots/hasil.png)
+![Hasil Tambah](hasil.png)
 
 ## Contoh Kode
 
