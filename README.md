@@ -5,154 +5,363 @@
 **Kelas :** TI.24.A5  
 
 ---
+# Lab10Web - PHP OOP dan Modularisasi
 
-## PRAKTIKUM 10 – PEMROGRAMAN BERORIENTASI OBJEK (OOP PHP)
+## Deskripsi
+Praktikum 10 ini mengimplementasikan konsep Object Oriented Programming (OOP) dan Modularisasi pada PHP dengan menggunakan Class Library untuk Form dan Database Connection.
 
-Praktikum ini bertujuan mengenalkan konsep dasar Object Oriented Programming (OOP) dalam PHP melalui contoh kelas Mobil, form input, dan pemrosesan data menggunakan object.
+## Tujuan Praktikum
+1. Memahami konsep dasar OOP (Object Oriented Programming)
+2. Memahami konsep dasar Class dan Object
+3. Membuat program OOP sederhana menggunakan PHP
+4. Mengimplementasikan modularisasi dengan Class Library
 
-## 📂 STRUKTUR FOLDER
+## Struktur Direktori
 
-Pastikan folder berada di:
-
-C:\xampp\htdocs\lab10_php_oop\
-
-
-**Dengan isi:**
-
+```
 lab10_php_oop/
-├── config.php
-├── mobil.php
-├── form.php
-├── form_input.php
-└── README.md
+├── config/
+│   └── config.php              # Konfigurasi database dan aplikasi
+├── class/
+│   ├── database.php            # Class Library untuk database
+│   └── form.php                # Class Library untuk form
+├── templates/
+│   ├── header.php              # Template header
+│   └── footer.php              # Template footer
+├── modules/
+│   ├── home.php                # Halaman home
+│   ├── about.php               # Halaman about
+│   ├── 404.php                 # Halaman error 404
+│   └── barang/                 # Module barang
+│       ├── index.php           # List data barang
+│       ├── tambah.php          # Tambah data
+│       ├── ubah.php            # Edit data
+│       └── hapus.php           # Hapus data
+├── images/                     # Folder untuk gambar
+├── style.css                   # File CSS
+├── index.php                   # Main routing file
+├── .htaccess                   # URL rewriting (optional)
+└── README.md                   # Dokumentasi
+```
 
-## 📄 1. FILE: config.php
+## Konsep OOP yang Digunakan
 
-Berisi kelas Mobil yang digunakan di seluruh file lain.
+### 1. Class (Kelas)
+Class adalah blueprint atau template untuk membuat object. Dalam aplikasi ini terdapat 2 class utama:
+- **Class Database**: Menangani koneksi dan operasi database
+- **Class Form**: Membuat form input secara dinamis
+
+### 2. Object (Objek)
+Object adalah instance dari class. Contoh:
 ```php
-✔ Kode:
-<?php
-// config.php
-class Mobil {
-    private $merk;
-    private $warna;
+$db = new Database();  // Membuat object dari class Database
+$form = new Form();    // Membuat object dari class Form
+```
 
-    public function __construct($merk, $warna) {
-        $this->merk = $merk;
-        $this->warna = $warna;
-    }
+### 3. Properties (Atribut)
+Properties adalah variabel yang ada di dalam class. Contoh pada class Database:
+```php
+private $host;
+private $user;
+private $password;
+private $db_name;
+protected $conn;
+```
 
-    public function info() {
-        return "Mobil merk: {$this->merk}, warna: {$this->warna}";
-    }
+### 4. Methods (Fungsi)
+Methods adalah fungsi yang ada di dalam class. Contoh pada class Database:
+```php
+public function insert($table, $data) { ... }
+public function update($table, $data, $where) { ... }
+public function delete($table, $filter) { ... }
+```
+
+### 5. Constructor
+Constructor adalah method yang otomatis dijalankan saat object dibuat:
+```php
+public function __construct() {
+    $this->getConfig();
+    $this->conn = new mysqli(...);
 }
 ```
 
-### ✔ Penjelasan:
+### 6. Encapsulation (Enkapsulasi)
+Penggunaan visibility modifier untuk melindungi data:
+- **private**: Hanya bisa diakses dari dalam class
+- **protected**: Bisa diakses dari class dan turunannya
+- **public**: Bisa diakses dari mana saja
 
-- private $merk, $warna;
-→ property mobil, hanya dapat diakses dari dalam class.
+## Class Library Database
 
-- construct()
-→ dijalankan otomatis saat object dibuat.
+Class Database menyediakan method untuk operasi CRUD:
 
-- info()
-→ mengembalikan teks deskripsi mobil.
-
-## 📄 2. FILE: mobil.php
-
-Menampilkan data mobil menggunakan class dari config.php.
-
+### 1. Method `query($sql)`
+Menjalankan query SQL custom:
 ```php
-✔ Kode:
-<?php
-include "config.php";
-
-$mobil1 = new Mobil("Toyota", "Hitam");
-$mobil2 = new Mobil("Honda", "Putih");
-
-echo "<h1>Daftar Mobil</h1>";
-echo "<p>" . $mobil1->info() . "</p>";
-echo "<p>" . $mobil2->info() . "</p>";
+$db = new Database();
+$result = $db->query("SELECT * FROM data_barang");
 ```
 
-### ✔ Penjelasan:
-
-- include "config.php";
-→ mengimpor class Mobil.
-
-- new Mobil()
-→ membuat object mobil.
-
-- $mobil1->info()
-→ mengambil informasi dari object.
-
-## 📄 3. FILE: form.php
-
-Halaman yang menampilkan form input data mobil.
-
+### 2. Method `get($table, $where)`
+Mengambil satu data dari tabel:
 ```php
-<?php include "config.php"; ?>
-<!DOCTYPE html>
-<html>
-<head><title>Form Input Mobil</title></head>
-<body>
-    <h1>Input Data Mobil</h1>
-
-    <form action="form_input.php" method="POST">
-        <label>Merk Mobil:</label><br>
-        <input type="text" name="merk" required><br><br>
-
-        <label>Warna Mobil:</label><br>
-        <input type="text" name="warna" required><br><br>
-
-        <button type="submit">Simpan</button>
-    </form>
-</body>
-</html>
+$data = $db->get('data_barang', "id_barang='1'");
 ```
 
-### ✔ Penjelasan:
-
-Form dikirim ke form_input.php
-
-Method: POST
-
-Input: merk & warna
-
-## 📄 4. FILE: form_input.php
-
-Memproses input dari form dan membuat object baru.
-
+### 3. Method `getAll($table, $where)`
+Mengambil semua data dari tabel:
 ```php
-<?php
-include "config.php";
+$result = $db->getAll('data_barang');
+```
 
-$merk = $_POST['merk'];
-$warna = $_POST['warna'];
+### 4. Method `insert($table, $data)`
+Menambah data ke tabel:
+```php
+$data = array(
+    'nama' => 'Laptop',
+    'harga' => 5000000
+);
+$db->insert('data_barang', $data);
+```
 
-$mobil = new Mobil($merk, $warna);
+### 5. Method `update($table, $data, $where)`
+Mengubah data di tabel:
+```php
+$data = array('harga' => 6000000);
+$db->update('data_barang', $data, "id_barang='1'");
+```
+
+### 6. Method `delete($table, $filter)`
+Menghapus data dari tabel:
+```php
+$db->delete('data_barang', "WHERE id_barang='1'");
+```
+
+## Class Library Form
+
+Class Form menyediakan cara mudah untuk membuat form input:
+
+### Method `addField($name, $label, $type, $value, $options)`
+Menambah field ke form:
+```php
+$form = new Form("action.php", "Submit");
+$form->addField('nama', 'Nama Barang', 'text', '');
+$form->addField('kategori', 'Kategori', 'select', '', $options);
+$form->addField('deskripsi', 'Deskripsi', 'textarea', '');
+$form->displayForm();
+```
+
+## Sistem Routing
+
+Aplikasi menggunakan routing sederhana melalui parameter `page`:
+
+### URL Format
+```
+index.php?page=module/action
+```
+
+### Contoh URL:
+- Home: `index.php` atau `index.php?page=home`
+- About: `index.php?page=about`
+- List Barang: `index.php?page=barang`
+- Tambah Barang: `index.php?page=barang/tambah`
+- Edit Barang: `index.php?page=barang/ubah&id=1`
+- Hapus Barang: `index.php?page=barang/hapus&id=1`
+
+### SEO Friendly URL (dengan .htaccess)
+Jika menggunakan .htaccess, URL bisa lebih sederhana:
+- Home: `/lab10_php_oop/`
+- About: `/lab10_php_oop/about`
+- List Barang: `/lab10_php_oop/barang`
+- Tambah: `/lab10_php_oop/barang/tambah`
+
+## Template System
+
+### Header Template
+File `templates/header.php` berisi:
+- HTML DOCTYPE dan meta tags
+- Link ke CSS
+- Header dengan judul aplikasi
+- Navigasi menu
+
+### Footer Template
+File `templates/footer.php` berisi:
+- Footer informasi
+- Penutup HTML tags
+
+Cara penggunaan:
+```php
+<?php 
+$title = "Judul Halaman";
+require('templates/header.php'); 
 ?>
-<!DOCTYPE html>
-<html>
-<head><title>Hasil Input</title></head>
-<body>
-    <h1>Data Mobil</h1>
-    <p><?php echo $mobil->info(); ?></p>
 
-    <a href="form.php">Kembali ke Form</a>
-</body>
-</html>
+<!-- Konten halaman -->
+
+<?php require('templates/footer.php'); ?>
 ```
 
-### ✔ Penjelasan:
+## Keunggulan Modularisasi
 
-Menerima data POST dari form.
+1. **Reusability**: Kode dapat digunakan berulang kali
+   - Class Database digunakan di semua module
+   - Template header/footer digunakan di semua halaman
 
-Membuat object $mobil.
+2. **Maintainability**: Mudah dalam perawatan
+   - Perubahan pada class hanya dilakukan di satu tempat
+   - Update design hanya perlu mengubah template
 
-Menampilkan info menggunakan ->info().
+3. **Scalability**: Mudah untuk dikembangkan
+   - Tambah module baru tanpa mengubah kode lama
+   - Tambah method baru ke class sesuai kebutuhan
 
+4. **Organization**: Struktur kode terorganisir
+   - Pemisahan berdasarkan fungsi (class, module, template)
+   - Mudah mencari dan mengelola file
 
+5. **Collaboration**: Memudahkan kerja tim
+   - Developer bisa bekerja di module berbeda
+   - Mengurangi konflik kode
 
-Menampilkan hasil input.
+## Instalasi dan Konfigurasi
+
+### 1. Persiapan Database
+Buat database dan tabel sesuai Praktikum sebelumnya:
+```sql
+CREATE DATABASE latihan1;
+USE latihan1;
+
+CREATE TABLE data_barang (
+    id_barang INT AUTO_INCREMENT PRIMARY KEY,
+    kategori VARCHAR(50),
+    nama VARCHAR(100),
+    harga_jual INT,
+    harga_beli INT,
+    stok INT,
+    gambar VARCHAR(255)
+);
+```
+
+### 2. Konfigurasi
+Edit file `config/config.php` sesuai dengan konfigurasi database Anda:
+```php
+$config = array(
+    'host' => 'localhost',
+    'username' => 'root',
+    'password' => '',
+    'db_name' => 'latihan1'
+);
+```
+
+### 3. Folder Images
+Pastikan folder `images/` sudah dibuat dan memiliki permission untuk upload file.
+
+### 4. Base URL
+Sesuaikan BASE_URL di `config/config.php`:
+```php
+define('BASE_URL', 'http://localhost/lab10_php_oop/');
+```
+
+## Cara Penggunaan
+
+### 1. Menampilkan Data
+Akses: `index.php?page=barang`
+
+### 2. Menambah Data
+1. Klik tombol "Tambah Data Barang"
+2. Isi form yang tersedia
+3. Upload gambar (opsional)
+4. Klik "Simpan Data"
+
+### 3. Mengedit Data
+1. Klik tombol "Edit" pada data yang ingin diubah
+2. Ubah data pada form
+3. Upload gambar baru jika ingin mengganti
+4. Klik "Update Data"
+
+### 4. Menghapus Data
+1. Klik tombol "Hapus" pada data yang ingin dihapus
+2. Konfirmasi penghapusan
+3. Data dan gambar akan terhapus
+
+## Screenshot
+
+### 1. Halaman Home
+![Home](screenshots/home.png)
+*Halaman utama aplikasi dengan informasi tentang fitur dan konsep OOP*
+
+### 2. Halaman About
+![About](screenshots/about.png)
+
+### 3. Halaman List Data Barang
+![List Barang](screenshots/list-barang.png)
+
+### 4. Halaman Tambah Barang
+![Tambah Data](screenshots/tambah-data.png)
+
+### 5. Hasil Setelah Tambah Barang
+![Hasil Tambah](screenshots/hasil-tambah.png)
+
+## Contoh Kode
+
+### Menggunakan Class Database
+```php
+// Include class
+require_once('class/database.php');
+
+// Create instance
+$db = new Database();
+
+// Insert data
+$data = array(
+    'kategori' => 'Elektronik',
+    'nama' => 'Laptop Asus',
+    'harga_jual' => 7000000,
+    'harga_beli' => 6000000,
+    'stok' => 5
+);
+$db->insert('data_barang', $data);
+
+// Get all data
+$result = $db->getAll('data_barang');
+while($row = $result->fetch_assoc()) {
+    echo $row['nama'];
+}
+
+// Update data
+$update_data = array('stok' => 10);
+$db->update('data_barang', $update_data, "id_barang='1'");
+
+// Delete data
+$db->delete('data_barang', "WHERE id_barang='1'");
+```
+
+### Menggunakan Class Form
+```php
+// Include class
+require_once('class/form.php');
+
+// Create instance
+$form = new Form("process.php", "Submit");
+
+// Add fields
+$form->addField('nama', 'Nama', 'text', '');
+$form->addField('email', 'Email', 'text', '');
+$form->addField('pesan', 'Pesan', 'textarea', '');
+
+// Display form
+$form->displayForm();
+```
+
+## Kesimpulan
+
+Praktikum ini berhasil mengimplementasikan:
+1.  Konsep OOP dengan Class dan Object
+2.  Modularisasi kode program
+3.  Class Library untuk Database dan Form
+4.  Template System untuk konsistensi tampilan
+5.  Routing System untuk URL yang terstruktur
+6.  CRUD operations menggunakan OOP
+
+## Lisensi
+© 2024 Universitas Pelita Bangsa
