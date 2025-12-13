@@ -287,20 +287,19 @@ Akses: `index.php?page=barang`
 ## Screenshot
 
 ### 1. Halaman Home
-![Home](screenshots/home.png)
-*Halaman utama aplikasi dengan informasi tentang fitur dan konsep OOP*
+![Home](home.png)
 
 ### 2. Halaman About
-![About](screenshots/about.png)
+![About](about.png)
 
 ### 3. Halaman List Data Barang
-![List Barang](screenshots/list-barang.png)
+![List Barang](data_barang.png)
 
 ### 4. Halaman Tambah Barang
-![Tambah Data](screenshots/tambah-data.png)
+![Tambah Data](screenshots/tambah_barang.png)
 
 ### 5. Hasil Setelah Tambah Barang
-![Hasil Tambah](screenshots/hasil-tambah.png)
+![Hasil Tambah](screenshots/hasil.png)
 
 ## Contoh Kode
 
